@@ -42,7 +42,7 @@ $db = new database();
        }
     }
      ?>
-     <>
+     
   <form action="" method="post" enctype="multipart/form-data">
    <table>
     <tr>
@@ -55,13 +55,33 @@ $db = new database();
     </tr>
    </table>
   </form>
+  
+
+   
+    <table>
     <?php
-    $query = "SELECT * FROM tbl_image order by id desc limit 1";
-    $getimage = $db->select($query);
-    if($getimage){
-        while($result = $getimage->fetch_assoc()){
-            ?><img src="<?php echo $result['image']; ?>" height="100px" 
-            width="200px"/>
-           <?php } } ?>
+    
+  if (isset($_GET['del'])) {
+   $id = $_GET['del'];
+
+   $getquery = "select * from tbl_image where id='$id'";
+   $getImg = $db->select($getquery);
+   if ($getImg) {
+    while ($imgdata = $getImg->fetch_assoc()) {
+    $delimg = $imgdata['image'];
+    unlink($delimg);
+    }
+   }
+   
+   $query = "delete from tbl_image where id='$id'";
+   $delImage = $db->delete($query);
+   if ($delImage) {
+     echo "<span class='success'>Image Deleted Successfully.
+     </span>";
+    }else {
+     echo "<span class='error'>Image Not Deleted !</span>";
+    }
+   }
+  ?>
  </div>
 <?php include 'inc/footer.php';?>
